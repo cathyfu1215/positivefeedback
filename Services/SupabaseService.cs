@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -65,6 +66,45 @@ namespace FeedbackApp.Services
             {
                 Console.WriteLine($"Exception when submitting feedback: {ex.Message}");
                 return false;
+            }
+        }
+        
+        public async Task<List<FeedbackModel>> GetAllFeedbackAsync()
+        {
+            try
+            {
+                // Check if Supabase credentials are available
+                if (string.IsNullOrEmpty(_supabaseUrl) || string.IsNullOrEmpty(_supabaseKey))
+                {
+                    Console.WriteLine("Supabase credentials are not configured. Cannot retrieve feedback.");
+                    return new List<FeedbackModel>();
+                }
+                
+                var url = $"{_supabaseUrl}/rest/v1/{_tableName}?select=*";
+                
+                var response = await _httpClient.GetAsync(url);
+                
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    var options = new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    };
+                    
+                    var feedbackList = JsonSerializer.Deserialize<List<FeedbackModel>>(responseContent, options);
+                    return feedbackList ?? new List<FeedbackModel>();
+                }
+                
+                var errorContent = await response.Content.ReadAsStringAsync();
+                var statusCode = (int)response.StatusCode;
+                Console.WriteLine($"Error retrieving feedback: StatusCode={statusCode}, Response={errorContent}");
+                return new List<FeedbackModel>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception when retrieving feedback: {ex.Message}");
+                return new List<FeedbackModel>();
             }
         }
     }
