@@ -33,3 +33,42 @@ Thumbs.db
 # Others (optional)
 *.swp
 *.bak
+
+
+# .NET SDK global tools / NuGet package info
+*.nupkg
+*.snupkg
+.nuget/
+
+# Dotnet CLI artifacts
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Temporary files for ASP.NET
+wwwroot/lib/
+
+# User secrets (used with dotnet user-secrets)
+secrets.json
+
+# VS for Mac
+*.pidb
+*.userprefs
+
+# Replit extras (depending on how it builds things)
+*.sqlite3
+*.pyc
+*.tmp
+
+# Build directories (in case of other targets)
+bin/
+obj/
+out/
+
+# JetBrains Rider (extra precaution)
+.idea/
+.idea_modules/
+
+# Cursor-specific cache (if it stores anything here)
+.cursor-cache/
+
