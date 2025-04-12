@@ -1,74 +1,80 @@
-# Build results
-bin/
-obj/
-
-# User-specific files
-*.user
-*.suo
-*.userosscache
-*.sln.docstates
-
-# Rider & VS Code
-.idea/
-.vscode/
-
-# Replit metadata
-.replit
-.replit.db
-*.replit
-
-# Environment variables / secrets
-.env
-appsettings.*.json
-
-# Logs and cache
-*.log
-.cache/
-logs/
-
-# System files
-.DS_Store
-Thumbs.db
-
-# Others (optional)
-*.swp
-*.bak
-
-
-# .NET SDK global tools / NuGet package info
-*.nupkg
-*.snupkg
-.nuget/
-
-# Dotnet CLI artifacts
-project.lock.json
-project.fragment.lock.json
-artifacts/
-
-# Temporary files for ASP.NET
-wwwroot/lib/
-
-# User secrets (used with dotnet user-secrets)
-secrets.json
-
-# VS for Mac
-*.pidb
-*.userprefs
-
-# Replit extras (depending on how it builds things)
-*.sqlite3
-*.pyc
-*.tmp
-
-# Build directories (in case of other targets)
+# -----------------------------
+# Build output directories
+# -----------------------------
 bin/
 obj/
 out/
+artifacts/
 
-# JetBrains Rider (extra precaution)
+# -----------------------------
+# IDE and editor configs
+# -----------------------------
+.vscode/
 .idea/
 .idea_modules/
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+*.userprefs
+*.pidb
 
-# Cursor-specific cache (if it stores anything here)
+# -----------------------------
+# Logs and cache
+# -----------------------------
+*.log
+.cache/
+logs/
+*.tmp
+
+# -----------------------------
+# Dotnet/NuGet specific
+# -----------------------------
+*.nupkg
+*.snupkg
+.nuget/
+project.lock.json
+project.fragment.lock.json
+
+# -----------------------------
+# ASP.NET static files
+# -----------------------------
+wwwroot/lib/
+
+# -----------------------------
+# Secrets and environment files
+# -----------------------------
+.env
+secrets.json
+appsettings.Development.json
+appsettings.Production.json
+
+# Optional: ignore all appsettings except the main one
+# appsettings.*.json   # Uncomment if you want to ignore all variants
+
+# -----------------------------
+# Replit-specific
+# -----------------------------
+.replit
+.replit.db
+*.replit
+replit.nix
+*.sqlite3
+
+# -----------------------------
+# System-specific
+# -----------------------------
+.DS_Store
+Thumbs.db
+
+# -----------------------------
+# Cursor-specific (if any cache is created)
+# -----------------------------
 .cursor-cache/
+
+# -----------------------------
+# Miscellaneous
+# -----------------------------
+*.bak
+*.swp
 
