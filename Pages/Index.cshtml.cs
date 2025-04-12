@@ -17,16 +17,17 @@ namespace FeedbackApp.Pages
         private readonly IConfiguration _configuration;
 
         [BindProperty]
-        public FeedbackModel Feedback { get; set; }
+        public FeedbackModel FeedbackInput { get; set; }
         
-        public string SubmissionError { get; set; }
+        public string ErrorMessage { get; set; }
+        public string SuccessMessage { get; set; }
 
         public IndexModel(ILogger<IndexModel> logger, SupabaseService supabaseService, IConfiguration configuration)
         {
             _logger = logger;
             _supabaseService = supabaseService;
             _configuration = configuration;
-            Feedback = new FeedbackModel();
+            FeedbackInput = new FeedbackModel();
         }
 
         public void OnGet()
@@ -35,7 +36,7 @@ namespace FeedbackApp.Pages
             if (string.IsNullOrEmpty(_configuration["Supabase:Url"]) || 
                 string.IsNullOrEmpty(_configuration["Supabase:Key"]))
             {
-                SubmissionError = "This app requires Supabase credentials to function. Ask the administrator to provide them.";
+                ErrorMessage = "This app requires Supabase credentials to function. Ask the administrator to provide them.";
             }
         }
 
@@ -45,7 +46,7 @@ namespace FeedbackApp.Pages
             if (string.IsNullOrEmpty(_configuration["Supabase:Url"]) || 
                 string.IsNullOrEmpty(_configuration["Supabase:Key"]))
             {
-                SubmissionError = "Supabase credentials are not configured. Unable to submit feedback.";
+                ErrorMessage = "Supabase credentials are not configured. Unable to submit feedback.";
                 return Page();
             }
             
@@ -56,50 +57,54 @@ namespace FeedbackApp.Pages
             }
 
             // Ensure lists are initialized and have at least one item
-            if (Feedback.Strengths == null || Feedback.Strengths.Count == 0 ||
-                Feedback.Improvements == null || Feedback.Improvements.Count == 0 ||
-                Feedback.HirableSuggestions == null || Feedback.HirableSuggestions.Count == 0)
+            if (FeedbackInput.Strengths == null || FeedbackInput.Strengths.Count == 0 ||
+                FeedbackInput.Improvements == null || FeedbackInput.Improvements.Count == 0 ||
+                FeedbackInput.HirableSuggestions == null || FeedbackInput.HirableSuggestions.Count == 0)
             {
-                if (Feedback.Strengths == null || Feedback.Strengths.Count == 0)
+                if (FeedbackInput.Strengths == null || FeedbackInput.Strengths.Count == 0)
                 {
-                    ModelState.AddModelError("Feedback.Strengths", "Please select at least one strength");
+                    ModelState.AddModelError("FeedbackInput.Strengths", "Please select at least one strength");
                 }
 
-                if (Feedback.Improvements == null || Feedback.Improvements.Count == 0)
+                if (FeedbackInput.Improvements == null || FeedbackInput.Improvements.Count == 0)
                 {
-                    ModelState.AddModelError("Feedback.Improvements", "Please select at least one area for improvement");
+                    ModelState.AddModelError("FeedbackInput.Improvements", "Please select at least one area for improvement");
                 }
 
-                if (Feedback.HirableSuggestions == null || Feedback.HirableSuggestions.Count == 0)
+                if (FeedbackInput.HirableSuggestions == null || FeedbackInput.HirableSuggestions.Count == 0)
                 {
-                    ModelState.AddModelError("Feedback.HirableSuggestions", "Please select at least one suggestion for improvement");
+                    ModelState.AddModelError("FeedbackInput.HirableSuggestions", "Please select at least one suggestion for improvement");
                 }
 
                 return Page();
             }
 
             // Set the timestamp for when the feedback was created
-            Feedback.CreatedAt = DateTime.UtcNow;
+            FeedbackInput.CreatedAt = DateTime.UtcNow;
 
             try
             {
                 // Submit the feedback to Supabase
-                var success = await _supabaseService.SubmitFeedbackAsync(Feedback);
+                var success = await _supabaseService.SubmitFeedbackAsync(FeedbackInput);
 
                 if (success)
                 {
-                    return RedirectToPage("/ThankYou");
+                    // Set success message and clear the form model
+                    SuccessMessage = "Thank you for your feedback! It has been submitted successfully.";
+                    ModelState.Clear(); // Clear model state to prevent re-validation errors
+                    FeedbackInput = new FeedbackModel(); // Reset the form fields
+                    return Page(); 
                 }
                 else
                 {
-                    SubmissionError = "The Supabase table 'feedback' may not exist yet. Please make sure to create the table using the SQL provided in the application documentation.";
+                    ErrorMessage = "The Supabase table 'feedback' may not exist yet. Please make sure to create the table using the SQL provided in the application documentation.";
                     return Page();
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error submitting feedback to Supabase");
-                SubmissionError = "An unexpected error occurred. Please try again later.";
+                ErrorMessage = "An unexpected error occurred. Please try again later.";
                 return Page();
             }
         }

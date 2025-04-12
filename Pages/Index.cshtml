@@ -1,121 +1,165 @@
 @page
 @model IndexModel
 @{
-    ViewData["Title"] = "Anonymous Interview Feedback";
+    ViewData["Title"] = "Home page";
 }
 
 <div class="container py-4">
-    <div class="row justify-content-center">
-        <div class="col-md-10 col-lg-8">
+    <div class="row">
+        <div class="col-12">
             <div class="card shadow">
                 <div class="card-header bg-primary text-white">
-                    <h2 class="mb-0">Anonymous Interview Feedback</h2>
+                    <h2 class="mb-0">Positive Feedback Form</h2>
                 </div>
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <p class="lead mb-0">Please provide your anonymous feedback about the interview. Your input helps candidates improve their interview performance.</p>
-                        <a asp-page="/Dashboard" class="btn btn-outline-primary"><i class="bi bi-bar-chart"></i> View Dashboard</a>
-                    </div>
-                    
-                    @if (!string.IsNullOrEmpty(Model.SubmissionError))
-                    {
-                        <div class="alert alert-danger mb-4">
-                            <strong>Error:</strong> @Model.SubmissionError
-                            <p class="mt-2 mb-0">You need to create the feedback table in Supabase using this SQL:</p>
-                            <pre class="bg-light p-2 mt-2 small text-wrap">
-create table feedback (
-  created_at timestamptz primary key default now(),
-  feedback_provider_role text,
-  strengths text[],
-  improvements text[],
-  hirable_suggestions text[],
-  comments text
-);
-                            </pre>
-                        </div>
-                    }
-                    
-                    <form method="post">
-                        <div asp-validation-summary="All" class="text-danger mb-4"></div>
-                        
-                        <!-- Feedback Provider Role -->
-                        <div class="mb-4">
-                            <label asp-for="Feedback.FeedbackProviderRole" class="form-label fw-bold">Your Role</label>
-                            <select asp-for="Feedback.FeedbackProviderRole" class="form-select">
-                                <option value="">Select your role</option>
-                                @foreach (var role in FeedbackApp.Models.FeedbackModel.RoleOptions)
-                                {
-                                    <option value="@role">@role</option>
-                                }
-                            </select>
-                            <span asp-validation-for="Feedback.FeedbackProviderRole" class="text-danger"></span>
-                        </div>
-                        
-                        <!-- Strengths -->
-                        <div class="mb-4">
-                            <label class="form-label fw-bold">Candidate's Strengths (select at least one)</label>
-                            <div class="card p-3">
-                                @for (int i = 0; i < FeedbackApp.Models.FeedbackModel.StrengthOptions.Count; i++)
-                                {
-                                    var strength = FeedbackApp.Models.FeedbackModel.StrengthOptions[i];
-                                    <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" 
-                                               id="strength_@i" 
-                                               name="Feedback.Strengths" 
-                                               value="@strength" />
-                                        <label class="form-check-label" for="strength_@i">@strength</label>
-                                    </div>
-                                }
+                    <p class="lead mb-4">Use this form to provide constructive feedback. Your insights help improve performance and create growth opportunities.</p>
+
+                    <form id="feedbackForm" method="post" class="needs-validation" novalidate>
+                        @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+                        {
+                            <div class="alert alert-success mb-4 feedback-animation" role="alert">
+                                @Model.SuccessMessage
                             </div>
-                            <span asp-validation-for="Feedback.Strengths" class="text-danger"></span>
-                        </div>
+                        }
                         
-                        <!-- Improvements -->
-                        <div class="mb-4">
-                            <label class="form-label fw-bold">Areas for Improvement (select at least one)</label>
-                            <div class="card p-3">
-                                @for (int i = 0; i < FeedbackApp.Models.FeedbackModel.ImprovementOptions.Count; i++)
-                                {
-                                    var improvement = FeedbackApp.Models.FeedbackModel.ImprovementOptions[i];
-                                    <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" 
-                                               id="improvement_@i" 
-                                               name="Feedback.Improvements" 
-                                               value="@improvement" />
-                                        <label class="form-check-label" for="improvement_@i">@improvement</label>
-                                    </div>
-                                }
+                        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                        {
+                            <div class="alert alert-danger mb-4" role="alert">
+                                @Model.ErrorMessage
                             </div>
-                            <span asp-validation-for="Feedback.Improvements" class="text-danger"></span>
-                        </div>
-                        
-                        <!-- Hirable Suggestions -->
-                        <div class="mb-4">
-                            <label class="form-label fw-bold">Suggestions for Improvement (select at least one)</label>
-                            <div class="card p-3">
-                                @for (int i = 0; i < FeedbackApp.Models.FeedbackModel.HirableSuggestionOptions.Count; i++)
-                                {
-                                    var suggestion = FeedbackApp.Models.FeedbackModel.HirableSuggestionOptions[i];
-                                    <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" 
-                                               id="suggestion_@i" 
-                                               name="Feedback.HirableSuggestions" 
-                                               value="@suggestion" />
-                                        <label class="form-check-label" for="suggestion_@i">@suggestion</label>
-                                    </div>
-                                }
+                        }
+
+                        <div class="form-section">
+                            <h3 class="mb-3">About You</h3>
+                            <div class="form-row">
+                                <div class="form-group form-group-lg">
+                                    <label asp-for="FeedbackInput.FeedbackProviderRole" class="form-label">Your Role</label>
+                                    <select asp-for="FeedbackInput.FeedbackProviderRole" class="form-select" required>
+                                        <option value="">Select your role...</option>
+                                        <option value="Manager">Manager</option>
+                                        <option value="Peer">Peer</option>
+                                        <option value="Direct Report">Direct Report</option>
+                                        <option value="Customer">Customer</option>
+                                        <option value="Partner">Partner</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                    <div class="invalid-feedback">Please select your role.</div>
+                                    <span asp-validation-for="FeedbackInput.FeedbackProviderRole" class="text-danger"></span>
+                                </div>
                             </div>
-                            <span asp-validation-for="Feedback.HirableSuggestions" class="text-danger"></span>
                         </div>
-                        
-                        <!-- Comments -->
-                        <div class="mb-4">
-                            <label asp-for="Feedback.Comments" class="form-label fw-bold">Additional Comments (Optional)</label>
-                            <textarea asp-for="Feedback.Comments" class="form-control" rows="4" placeholder="Add any additional feedback here..."></textarea>
+
+                        <div class="form-section">
+                            <h3 class="mb-3">Feedback Areas</h3>
+                            
+                            <div class="form-row">
+                                <div class="form-group form-group-md">
+                                    <label class="form-label">Strengths (Select at least one)</label>
+                                    <div id="strengthsGroup" class="checkbox-group">
+                                        <div class="form-check">
+                                            <input class="form-check-input strength-check" type="checkbox" name="FeedbackInput.Strengths" value="Communication" id="strength1">
+                                            <label class="form-check-label" for="strength1">Communication</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input strength-check" type="checkbox" name="FeedbackInput.Strengths" value="Leadership" id="strength2">
+                                            <label class="form-check-label" for="strength2">Leadership</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input strength-check" type="checkbox" name="FeedbackInput.Strengths" value="Technical Skills" id="strength3">
+                                            <label class="form-check-label" for="strength3">Technical Skills</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input strength-check" type="checkbox" name="FeedbackInput.Strengths" value="Problem Solving" id="strength4">
+                                            <label class="form-check-label" for="strength4">Problem Solving</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input strength-check" type="checkbox" name="FeedbackInput.Strengths" value="Teamwork" id="strength5">
+                                            <label class="form-check-label" for="strength5">Teamwork</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input strength-check" type="checkbox" name="FeedbackInput.Strengths" value="Innovation" id="strength6">
+                                            <label class="form-check-label" for="strength6">Innovation</label>
+                                        </div>
+                                    </div>
+                                    <div class="invalid-feedback strength-feedback">Please select at least one strength.</div>
+                                </div>
+                                
+                                <div class="form-group form-group-md">
+                                    <label class="form-label">Areas for Improvement (Select at least one)</label>
+                                    <div id="improvementsGroup" class="checkbox-group">
+                                        <div class="form-check">
+                                            <input class="form-check-input improvement-check" type="checkbox" name="FeedbackInput.Improvements" value="Communication" id="improvement1">
+                                            <label class="form-check-label" for="improvement1">Communication</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input improvement-check" type="checkbox" name="FeedbackInput.Improvements" value="Time Management" id="improvement2">
+                                            <label class="form-check-label" for="improvement2">Time Management</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input improvement-check" type="checkbox" name="FeedbackInput.Improvements" value="Technical Skills" id="improvement3">
+                                            <label class="form-check-label" for="improvement3">Technical Skills</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input improvement-check" type="checkbox" name="FeedbackInput.Improvements" value="Delegation" id="improvement4">
+                                            <label class="form-check-label" for="improvement4">Delegation</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input improvement-check" type="checkbox" name="FeedbackInput.Improvements" value="Work-Life Balance" id="improvement5">
+                                            <label class="form-check-label" for="improvement5">Work-Life Balance</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input improvement-check" type="checkbox" name="FeedbackInput.Improvements" value="Strategic Thinking" id="improvement6">
+                                            <label class="form-check-label" for="improvement6">Strategic Thinking</label>
+                                        </div>
+                                    </div>
+                                    <div class="invalid-feedback improvement-feedback">Please select at least one area for improvement.</div>
+                                </div>
+                                
+                                <div class="form-group form-group-md">
+                                    <label class="form-label">Suggestions for Future (Select at least one)</label>
+                                    <div id="suggestionsGroup" class="checkbox-group">
+                                        <div class="form-check">
+                                            <input class="form-check-input suggestion-check" type="checkbox" name="FeedbackInput.HirableSuggestions" value="Training" id="suggestion1">
+                                            <label class="form-check-label" for="suggestion1">Training</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input suggestion-check" type="checkbox" name="FeedbackInput.HirableSuggestions" value="Mentoring" id="suggestion2">
+                                            <label class="form-check-label" for="suggestion2">Mentoring</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input suggestion-check" type="checkbox" name="FeedbackInput.HirableSuggestions" value="New Projects" id="suggestion3">
+                                            <label class="form-check-label" for="suggestion3">New Projects</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input suggestion-check" type="checkbox" name="FeedbackInput.HirableSuggestions" value="Leadership Opportunities" id="suggestion4">
+                                            <label class="form-check-label" for="suggestion4">Leadership Opportunities</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input suggestion-check" type="checkbox" name="FeedbackInput.HirableSuggestions" value="Process Improvement" id="suggestion5">
+                                            <label class="form-check-label" for="suggestion5">Process Improvement</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input suggestion-check" type="checkbox" name="FeedbackInput.HirableSuggestions" value="Cross-functional Collaboration" id="suggestion6">
+                                            <label class="form-check-label" for="suggestion6">Cross-functional Collaboration</label>
+                                        </div>
+                                    </div>
+                                    <div class="invalid-feedback suggestion-feedback">Please select at least one suggestion.</div>
+                                </div>
+                            </div>
                         </div>
-                        
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary btn-lg">Submit Feedback</button>
+
+                        <div class="form-section">
+                            <h3 class="mb-3">Additional Comments</h3>
+                            <div class="form-row">
+                                <div class="form-group" style="width: 100%;">
+                                    <label asp-for="FeedbackInput.Comments" class="form-label">Additional Comments (Optional)</label>
+                                    <textarea asp-for="FeedbackInput.Comments" class="form-control" rows="4"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end mt-4">
+                            <button type="submit" class="btn btn-primary">Submit Feedback</button>
                         </div>
                     </form>
                 </div>
@@ -125,48 +169,46 @@ create table feedback (
 </div>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
     <script>
-        // Add client-side validation to ensure at least one checkbox is selected in each group
-        document.addEventListener("DOMContentLoaded", function() {
-            console.log("Page loaded and ready");
-            const form = document.querySelector("form");
+        document.addEventListener('DOMContentLoaded', function () {
+            // Form validation
+            var form = document.getElementById('feedbackForm');
             
-            form.addEventListener("submit", function(event) {
-                const strengths = document.querySelectorAll('input[name="Feedback.Strengths"]:checked');
-                const improvements = document.querySelectorAll('input[name="Feedback.Improvements"]:checked');
-                const suggestions = document.querySelectorAll('input[name="Feedback.HirableSuggestions"]:checked');
-                
-                let isValid = true;
-                
-                if (strengths.length === 0) {
-                    const errorSpan = document.querySelector('span[data-valmsg-for="Feedback.Strengths"]');
-                    if (errorSpan) {
-                        errorSpan.textContent = "Please select at least one strength";
-                    }
-                    isValid = false;
-                }
-                
-                if (improvements.length === 0) {
-                    const errorSpan = document.querySelector('span[data-valmsg-for="Feedback.Improvements"]');
-                    if (errorSpan) {
-                        errorSpan.textContent = "Please select at least one area for improvement";
-                    }
-                    isValid = false;
-                }
-                
-                if (suggestions.length === 0) {
-                    const errorSpan = document.querySelector('span[data-valmsg-for="Feedback.HirableSuggestions"]');
-                    if (errorSpan) {
-                        errorSpan.textContent = "Please select at least one suggestion for improvement";
-                    }
-                    isValid = false;
-                }
-                
-                if (!isValid) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
                     event.preventDefault();
+                    event.stopPropagation();
                 }
-            });
+                
+                // Check if at least one strength is selected
+                var strengthChecks = document.querySelectorAll('.strength-check:checked');
+                if (strengthChecks.length === 0) {
+                    event.preventDefault();
+                    document.querySelector('.strength-feedback').style.display = 'block';
+                } else {
+                    document.querySelector('.strength-feedback').style.display = 'none';
+                }
+                
+                // Check if at least one improvement is selected
+                var improvementChecks = document.querySelectorAll('.improvement-check:checked');
+                if (improvementChecks.length === 0) {
+                    event.preventDefault();
+                    document.querySelector('.improvement-feedback').style.display = 'block';
+                } else {
+                    document.querySelector('.improvement-feedback').style.display = 'none';
+                }
+                
+                // Check if at least one suggestion is selected
+                var suggestionChecks = document.querySelectorAll('.suggestion-check:checked');
+                if (suggestionChecks.length === 0) {
+                    event.preventDefault();
+                    document.querySelector('.suggestion-feedback').style.display = 'block';
+                } else {
+                    document.querySelector('.suggestion-feedback').style.display = 'none';
+                }
+                
+                form.classList.add('was-validated');
+            }, false);
         });
     </script>
 }
