@@ -38,7 +38,7 @@
                     }
                     else
                     {
-                        <!-- Analytics Section -->
+                        <!-- Summary Stats Section -->
                         <div class="row mb-4">
                             <div class="col-md-4 mb-3">
                                 <div class="card bg-light">
@@ -61,6 +61,65 @@
                                     <div class="card-body text-center">
                                         <h5 class="card-title">Most Mentioned Strength</h5>
                                         <p class="display-5">@Model.MostCommonStrength</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Charts Section -->
+                        <div class="row mb-4">
+                            <div class="col-md-6 mb-4">
+                                <div class="card shadow">
+                                    <div class="card-header bg-primary text-white">
+                                        <h5 class="mb-0">Strengths Radar Chart</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="strengthsRadarChart" width="400" height="300"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="card shadow">
+                                    <div class="card-header bg-primary text-white">
+                                        <h5 class="mb-0">Improvements Bar Chart</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="improvementsBarChart" width="400" height="300"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Suggestions Overview -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="card shadow">
+                                    <div class="card-header bg-primary text-white">
+                                        <h5 class="mb-0">Suggestions Overview</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            @foreach (var suggestion in Model.SuggestionsCounts)
+                                            {
+                                                <div class="col-md-4 col-lg-3 mb-3">
+                                                    <div class="card h-100 border-0 bg-light">
+                                                        <div class="card-body">
+                                                            <h6 class="card-title">@suggestion.Key</h6>
+                                                            <div class="d-flex align-items-end mt-2">
+                                                                <div class="progress flex-grow-1" style="height: 10px;">
+                                                                    <div class="progress-bar bg-info" role="progressbar" 
+                                                                         style="width: @(suggestion.Value * 100 / Math.Max(1, Model.FeedbackList.Count))%;" 
+                                                                         aria-valuenow="@suggestion.Value" 
+                                                                         aria-valuemin="0" 
+                                                                         aria-valuemax="@Model.FeedbackList.Count"></div>
+                                                                </div>
+                                                                <span class="ms-2 small">@suggestion.Value</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -131,3 +190,77 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Only initialize charts if elements exist
+            const strengthsChartEl = document.getElementById('strengthsRadarChart');
+            const improvementsChartEl = document.getElementById('improvementsBarChart');
+            
+            if (strengthsChartEl) {
+                // Initialize Strengths Radar Chart
+                const strengthsData = @Html.Raw(Model.StrengthsChartData);
+                if (strengthsData && strengthsData.labels && strengthsData.labels.length > 0) {
+                    new Chart(strengthsChartEl, {
+                        type: 'radar',
+                        data: strengthsData,
+                        options: {
+                            scales: {
+                                r: {
+                                    beginAtZero: true
+                                }
+                            },
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Strength Areas Distribution'
+                                },
+                                legend: {
+                                    display: false
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    strengthsChartEl.parentNode.innerHTML = '<div class="alert alert-info">Not enough data to display strengths chart</div>';
+                }
+            }
+            
+            if (improvementsChartEl) {
+                // Initialize Improvements Bar Chart
+                const improvementsData = @Html.Raw(Model.ImprovementsChartData);
+                if (improvementsData && improvementsData.labels && improvementsData.labels.length > 0) {
+                    new Chart(improvementsChartEl, {
+                        type: 'bar',
+                        data: improvementsData,
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        stepSize: 1
+                                    }
+                                }
+                            },
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Areas for Improvement'
+                                },
+                                legend: {
+                                    display: false
+                                }
+                            },
+                            responsive: true,
+                            maintainAspectRatio: false
+                        }
+                    });
+                } else {
+                    improvementsChartEl.parentNode.innerHTML = '<div class="alert alert-info">Not enough data to display improvements chart</div>';
+                }
+            }
+        });
+    </script>
+}

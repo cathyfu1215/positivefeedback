@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using System.Text.Json;
 
 namespace FeedbackApp.Pages
 {
@@ -22,6 +23,15 @@ namespace FeedbackApp.Pages
         public bool IsSupabaseConfigured { get; set; } = false;
         public string MostCommonRole { get; set; } = "N/A";
         public string MostCommonStrength { get; set; } = "N/A";
+        
+        // Data for charts
+        public Dictionary<string, int> StrengthsCounts { get; set; } = new Dictionary<string, int>();
+        public Dictionary<string, int> ImprovementsCounts { get; set; } = new Dictionary<string, int>();
+        public Dictionary<string, int> SuggestionsCounts { get; set; } = new Dictionary<string, int>();
+        
+        // JSON data for charts
+        public string StrengthsChartData { get; set; }
+        public string ImprovementsChartData { get; set; }
 
         public DashboardModel(ILogger<DashboardModel> logger, SupabaseService supabaseService, IConfiguration configuration)
         {
@@ -49,6 +59,9 @@ namespace FeedbackApp.Pages
                 
                 // Calculate analytics
                 CalculateAnalytics();
+                
+                // Prepare chart data
+                PrepareChartData();
                 
                 IsLoading = false;
             }
@@ -78,18 +91,76 @@ namespace FeedbackApp.Pages
                 MostCommonRole = topRole.Role;
             }
 
-            // Calculate most common strength
-            var allStrengths = FeedbackList
+            // Calculate strengths frequencies
+            StrengthsCounts = FeedbackList
                 .SelectMany(f => f.Strengths)
                 .GroupBy(s => s)
-                .Select(g => new { Strength = g.Key, Count = g.Count() })
-                .OrderByDescending(g => g.Count);
+                .ToDictionary(g => g.Key, g => g.Count());
 
-            var topStrength = allStrengths.FirstOrDefault();
-            if (topStrength != null)
+            // Get most common strength
+            var topStrength = StrengthsCounts.OrderByDescending(kvp => kvp.Value).FirstOrDefault();
+            if (!string.IsNullOrEmpty(topStrength.Key))
             {
-                MostCommonStrength = topStrength.Strength;
+                MostCommonStrength = topStrength.Key;
             }
+
+            // Calculate improvements frequencies
+            ImprovementsCounts = FeedbackList
+                .SelectMany(f => f.Improvements)
+                .GroupBy(s => s)
+                .ToDictionary(g => g.Key, g => g.Count());
+
+            // Calculate suggestions frequencies
+            SuggestionsCounts = FeedbackList
+                .SelectMany(f => f.HirableSuggestions)
+                .GroupBy(s => s)
+                .ToDictionary(g => g.Key, g => g.Count());
+        }
+        
+        private void PrepareChartData()
+        {
+            if (FeedbackList.Count == 0)
+            {
+                return;
+            }
+            
+            // Create JSON data for the strengths radar chart
+            var strengthsData = new
+            {
+                labels = StrengthsCounts.Keys.ToArray(),
+                datasets = new[]
+                {
+                    new
+                    {
+                        label = "Strengths",
+                        data = StrengthsCounts.Values.ToArray(),
+                        backgroundColor = "rgba(75, 192, 192, 0.2)",
+                        borderColor = "rgba(75, 192, 192, 1)",
+                        borderWidth = 1
+                    }
+                }
+            };
+            
+            StrengthsChartData = JsonSerializer.Serialize(strengthsData);
+            
+            // Create JSON data for the improvements bar chart
+            var improvementsData = new
+            {
+                labels = ImprovementsCounts.Keys.ToArray(),
+                datasets = new[]
+                {
+                    new
+                    {
+                        label = "Improvements",
+                        data = ImprovementsCounts.Values.ToArray(),
+                        backgroundColor = "rgba(255, 159, 64, 0.2)",
+                        borderColor = "rgba(255, 159, 64, 1)",
+                        borderWidth = 1
+                    }
+                }
+            };
+            
+            ImprovementsChartData = JsonSerializer.Serialize(improvementsData);
         }
     }
 }
