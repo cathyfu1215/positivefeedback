@@ -1,0 +1,159 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Anonymous Interview Feedback";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">Anonymous Interview Feedback</h2>
+                </div>
+                <div class="card-body">
+                    <p class="lead mb-4">Please provide your anonymous feedback about the interview. Your input helps candidates improve their interview performance.</p>
+                    
+                    @if (!string.IsNullOrEmpty(Model.SubmissionError))
+                    {
+                        <div class="alert alert-danger mb-4">
+                            <strong>Error:</strong> @Model.SubmissionError
+                            <p class="mt-2 mb-0">Tip: The app needs Supabase credentials to store feedback. If you're the administrator, please provide these credentials.</p>
+                        </div>
+                    }
+                    
+                    <form method="post">
+                        <div asp-validation-summary="All" class="text-danger mb-4"></div>
+                        
+                        <!-- Feedback Provider Role -->
+                        <div class="mb-4">
+                            <label asp-for="Feedback.FeedbackProviderRole" class="form-label fw-bold">Your Role</label>
+                            <select asp-for="Feedback.FeedbackProviderRole" class="form-select">
+                                <option value="">Select your role</option>
+                                @foreach (var role in FeedbackApp.Models.FeedbackModel.RoleOptions)
+                                {
+                                    <option value="@role">@role</option>
+                                }
+                            </select>
+                            <span asp-validation-for="Feedback.FeedbackProviderRole" class="text-danger"></span>
+                        </div>
+                        
+                        <!-- Strengths -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Candidate's Strengths (select at least one)</label>
+                            <div class="card p-3">
+                                @for (int i = 0; i < FeedbackApp.Models.FeedbackModel.StrengthOptions.Count; i++)
+                                {
+                                    var strength = FeedbackApp.Models.FeedbackModel.StrengthOptions[i];
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" 
+                                               id="strength_@i" 
+                                               name="Feedback.Strengths" 
+                                               value="@strength" />
+                                        <label class="form-check-label" for="strength_@i">@strength</label>
+                                    </div>
+                                }
+                            </div>
+                            <span asp-validation-for="Feedback.Strengths" class="text-danger"></span>
+                        </div>
+                        
+                        <!-- Improvements -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Areas for Improvement (select at least one)</label>
+                            <div class="card p-3">
+                                @for (int i = 0; i < FeedbackApp.Models.FeedbackModel.ImprovementOptions.Count; i++)
+                                {
+                                    var improvement = FeedbackApp.Models.FeedbackModel.ImprovementOptions[i];
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" 
+                                               id="improvement_@i" 
+                                               name="Feedback.Improvements" 
+                                               value="@improvement" />
+                                        <label class="form-check-label" for="improvement_@i">@improvement</label>
+                                    </div>
+                                }
+                            </div>
+                            <span asp-validation-for="Feedback.Improvements" class="text-danger"></span>
+                        </div>
+                        
+                        <!-- Hirable Suggestions -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Suggestions for Improvement (select at least one)</label>
+                            <div class="card p-3">
+                                @for (int i = 0; i < FeedbackApp.Models.FeedbackModel.HirableSuggestionOptions.Count; i++)
+                                {
+                                    var suggestion = FeedbackApp.Models.FeedbackModel.HirableSuggestionOptions[i];
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" 
+                                               id="suggestion_@i" 
+                                               name="Feedback.HirableSuggestions" 
+                                               value="@suggestion" />
+                                        <label class="form-check-label" for="suggestion_@i">@suggestion</label>
+                                    </div>
+                                }
+                            </div>
+                            <span asp-validation-for="Feedback.HirableSuggestions" class="text-danger"></span>
+                        </div>
+                        
+                        <!-- Comments -->
+                        <div class="mb-4">
+                            <label asp-for="Feedback.Comments" class="form-label fw-bold">Additional Comments (Optional)</label>
+                            <textarea asp-for="Feedback.Comments" class="form-control" rows="4" placeholder="Add any additional feedback here..."></textarea>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">Submit Feedback</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Add client-side validation to ensure at least one checkbox is selected in each group
+        document.addEventListener("DOMContentLoaded", function() {
+            console.log("Page loaded and ready");
+            const form = document.querySelector("form");
+            
+            form.addEventListener("submit", function(event) {
+                const strengths = document.querySelectorAll('input[name="Feedback.Strengths"]:checked');
+                const improvements = document.querySelectorAll('input[name="Feedback.Improvements"]:checked');
+                const suggestions = document.querySelectorAll('input[name="Feedback.HirableSuggestions"]:checked');
+                
+                let isValid = true;
+                
+                if (strengths.length === 0) {
+                    const errorSpan = document.querySelector('span[data-valmsg-for="Feedback.Strengths"]');
+                    if (errorSpan) {
+                        errorSpan.textContent = "Please select at least one strength";
+                    }
+                    isValid = false;
+                }
+                
+                if (improvements.length === 0) {
+                    const errorSpan = document.querySelector('span[data-valmsg-for="Feedback.Improvements"]');
+                    if (errorSpan) {
+                        errorSpan.textContent = "Please select at least one area for improvement";
+                    }
+                    isValid = false;
+                }
+                
+                if (suggestions.length === 0) {
+                    const errorSpan = document.querySelector('span[data-valmsg-for="Feedback.HirableSuggestions"]');
+                    if (errorSpan) {
+                        errorSpan.textContent = "Please select at least one suggestion for improvement";
+                    }
+                    isValid = false;
+                }
+                
+                if (!isValid) {
+                    event.preventDefault();
+                }
+            });
+        });
+    </script>
+}

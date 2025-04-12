@@ -1,0 +1,54 @@
+{
+  "Version": 1,
+  "Hash": "1eQI9v+HBL8weukMNNJ8w5kn+a7kTby5ZxndIGHO6U8=",
+  "Source": "FeedbackApp",
+  "BasePath": "_content/FeedbackApp",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "FeedbackApp/wwwroot",
+      "Source": "FeedbackApp",
+      "ContentRoot": "/home/runner/workspace/wwwroot/",
+      "BasePath": "_content/FeedbackApp",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "/home/runner/workspace/wwwroot/css/site.css",
+      "SourceId": "FeedbackApp",
+      "SourceType": "Discovered",
+      "ContentRoot": "/home/runner/workspace/wwwroot/",
+      "BasePath": "_content/FeedbackApp",
+      "RelativePath": "css/site.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/css/site.css"
+    },
+    {
+      "Identity": "/home/runner/workspace/wwwroot/js/site.js",
+      "SourceId": "FeedbackApp",
+      "SourceType": "Discovered",
+      "ContentRoot": "/home/runner/workspace/wwwroot/",
+      "BasePath": "_content/FeedbackApp",
+      "RelativePath": "js/site.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/js/site.js"
+    }
+  ]
+}
