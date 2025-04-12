@@ -18,7 +18,17 @@
                     {
                         <div class="alert alert-danger mb-4">
                             <strong>Error:</strong> @Model.SubmissionError
-                            <p class="mt-2 mb-0">Tip: The app needs Supabase credentials to store feedback. If you're the administrator, please provide these credentials.</p>
+                            <p class="mt-2 mb-0">You need to create the feedback table in Supabase using this SQL:</p>
+                            <pre class="bg-light p-2 mt-2 small text-wrap">
+create table feedback (
+  created_at timestamptz primary key default now(),
+  feedback_provider_role text,
+  strengths text[],
+  improvements text[],
+  hirable_suggestions text[],
+  comments text
+);
+                            </pre>
                         </div>
                     }
                     

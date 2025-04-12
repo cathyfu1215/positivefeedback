@@ -92,7 +92,7 @@ namespace FeedbackApp.Pages
                 }
                 else
                 {
-                    SubmissionError = "Unable to save feedback to Supabase. Please check Supabase configuration.";
+                    SubmissionError = "The Supabase table 'feedback' may not exist yet. Please make sure to create the table using the SQL provided in the application documentation.";
                     return Page();
                 }
             }

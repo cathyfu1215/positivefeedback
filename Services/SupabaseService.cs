@@ -57,7 +57,8 @@ namespace FeedbackApp.Services
                 }
                 
                 var responseContent = await response.Content.ReadAsStringAsync();
-                Console.WriteLine($"Error submitting feedback: {responseContent}");
+                var statusCode = (int)response.StatusCode;
+                Console.WriteLine($"Error submitting feedback: StatusCode={statusCode}, Response={responseContent}");
                 return false;
             }
             catch (Exception ex)
