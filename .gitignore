@@ -1,0 +1,35 @@
+# Build results
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider & VS Code
+.idea/
+.vscode/
+
+# Replit metadata
+.replit
+.replit.db
+*.replit
+
+# Environment variables / secrets
+.env
+appsettings.*.json
+
+# Logs and cache
+*.log
+.cache/
+logs/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Others (optional)
+*.swp
+*.bak
