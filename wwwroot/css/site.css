@@ -8,7 +8,7 @@
   --border-radius: 12px;
   --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   --transition: all 0.3s ease;
-  --content-max-width: 85%;
+  --content-max-width: 95%;
   --container-padding: 1rem;
 }
 
@@ -298,41 +298,188 @@ body {
   }
 }
 
-/* Form layout improvements */
+/* Form Sections and Rows */
 .form-row {
   display: flex;
   flex-wrap: wrap;
-  margin-right: -0.5rem;
-  margin-left: -0.5rem;
+  margin-right: -15px;
+  margin-left: -15px;
+  gap: 20px;
 }
 
 .form-group {
-  padding-right: 0.5rem;
-  padding-left: 0.5rem;
   margin-bottom: 1rem;
-}
-
-.form-group-sm {
-  flex: 0 0 25%;
-  max-width: 25%;
+  padding: 0 15px;
 }
 
 .form-group-md {
-  flex: 0 0 33.333333%;
-  max-width: 33.333333%;
+  flex: 1;
+  min-width: 300px;
+  background-color: rgba(66, 133, 244, 0.03);
+  border: 1px solid rgba(66, 133, 244, 0.1);
+  border-radius: var(--border-radius);
+  padding: 1.25rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+  transition: var(--transition);
+}
+
+.form-group-md:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+  border-color: rgba(66, 133, 244, 0.2);
+}
+
+/* Column styles for the feedback areas */
+.form-group-md:nth-child(1) {
+  border-left: 3px solid var(--primary-color);
+}
+
+.form-group-md:nth-child(2) {
+  border-left: 3px solid var(--accent-color-green);
+  background-color: rgba(52, 168, 83, 0.03);
+}
+
+.form-group-md:nth-child(3) {
+  border-left: 3px solid var(--secondary-color);
+  background-color: rgba(251, 188, 5, 0.03);
+}
+
+.form-group-sm {
+  width: calc(50% - 1rem);
 }
 
 .form-group-lg {
-  flex: 0 0 50%;
-  max-width: 50%;
+  flex: 0 0 calc(50% - 1rem);
+  max-width: calc(50% - 1rem);
 }
 
 .form-section {
-  margin-bottom: 1.5rem;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .checkbox-group {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 0.5rem;
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 0.5rem;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+/* Add column headers styling */
+.form-group-md .form-label {
+  display: block;
+  text-align: center;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  font-weight: 500;
+  color: #444;
+}
+
+/* Improve the checkbox appearance */
+.form-check-input {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: 0.2rem;
+}
+
+/* Additional responsive adjustments */
+@media (max-width: 992px) {
+  .form-group-md {
+    min-width: 100%;
+    margin-bottom: 1.5rem;
+  }
+}
+
+/* Performance Insights Section */
+.form-section:has(#strengthsRadarChart) {
+  margin-bottom: 2rem;
+}
+
+.form-section:has(#strengthsRadarChart) .form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+/* Dashboard specific card adjustments */
+.card-header h5 {
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin-bottom: 0;
+}
+
+/* Card height adjustments for charts */
+.form-group-lg .card {
+  height: 100%;
+}
+
+/* Chart container heights */
+#strengthsRadarChart, #improvementsBubbleChart {
+  min-height: 350px;
+  width: 100%;
+}
+
+/* Responsive adjustments for dashboard */
+@media (min-width: 992px) {
+  .form-section:has(#strengthsRadarChart) .form-group-lg {
+    flex: 0 0 calc(50% - 1rem);
+    max-width: calc(50% - 1rem);
+  }
+  
+  /* Suggestions cards in 3 columns on large screens */
+  .form-group-sm {
+    width: calc(33.333% - 1rem);
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  .form-section:has(#strengthsRadarChart) .form-group-lg {
+    flex: 0 0 100%;
+    max-width: 100%;
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Suggestions cards in 2 columns on medium screens */
+  .form-group-sm {
+    width: calc(50% - 1rem);
+  }
+  
+  #strengthsRadarChart, #improvementsBubbleChart {
+    min-height: 300px;
+  }
+}
+
+@media (max-width: 767px) {
+  .form-section:has(#strengthsRadarChart) .form-group-lg {
+    flex: 0 0 100%;
+    max-width: 100%;
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Suggestions cards in 1 column on small screens */
+  .form-group-sm {
+    width: 100%;
+  }
+  
+  #strengthsRadarChart, #improvementsBubbleChart {
+    min-height: 300px;
+  }
+  
+  /* Table responsive improvements */
+  .table-responsive {
+    border: 0;
+    overflow-x: auto;
+  }
+  
+  .table th, .table td {
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 576px) {
+  #strengthsRadarChart, #improvementsBubbleChart {
+    min-height: 250px;
+  }
 }
