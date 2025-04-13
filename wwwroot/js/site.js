@@ -61,6 +61,36 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
+    // Make sure charts are properly wrapped in responsive containers
+    const improveChartContainers = () => {
+        const chartElements = document.querySelectorAll('#strengthsRadarChart, #improvementsBubbleChart');
+        chartElements.forEach(chart => {
+            // Only wrap if not already wrapped
+            if (!chart.parentElement.classList.contains('chart-container')) {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'chart-container';
+                chart.parentNode.insertBefore(wrapper, chart);
+                wrapper.appendChild(chart);
+            }
+        });
+    };
+    
+    // Call immediately and also on window resize
+    improveChartContainers();
+    
+    // Handle window resize for responsive charts
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            // If you have chart objects, you would call their resize methods here
+            const chartContainers = document.querySelectorAll('.chart-container');
+            chartContainers.forEach(container => {
+                container.style.width = '100%';
+            });
+        }, 250);
+    });
+    
     console.log('Zelda theme enhancements activated');
 });
 
