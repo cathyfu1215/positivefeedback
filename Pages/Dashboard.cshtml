@@ -42,29 +42,23 @@
                         <!-- Summary Stats Section -->
                         <div class="form-section">
                             <h3 class="mb-3">Hero's Journey Statistics</h3>
-                            <div class="form-row">
-                                <div class="form-group form-group-md">
-                                    <div class="card dashboard-card sheikah-border h-100">
-                                        <div class="card-body text-center">
-                                            <h5 class="card-title">Total Guidance Received</h5>
-                                            <p class="display-4">@Model.FeedbackList.Count</p>
-                                        </div>
+                            <div class="row row-cols-1 row-cols-md-3 g-3">
+                                <div class="col">
+                                    <div class="stat-card">
+                                        <h5 class="card-title">Total Guidance Received</h5>
+                                        <p class="display-4">@Model.FeedbackList.Count</p>
                                     </div>
                                 </div>
-                                <div class="form-group form-group-md">
-                                    <div class="card dashboard-card sheikah-border h-100">
-                                        <div class="card-body text-center">
-                                            <h5 class="card-title">Most Common Mentor Type</h5>
-                                            <p class="display-5">@Model.MostCommonRole</p>
-                                        </div>
+                                <div class="col">
+                                    <div class="stat-card">
+                                        <h5 class="card-title">Most Common Mentor Type</h5>
+                                        <p class="display-5">@Model.MostCommonRole</p>
                                     </div>
                                 </div>
-                                <div class="form-group form-group-md">
-                                    <div class="card dashboard-card sheikah-border h-100">
-                                        <div class="card-body text-center">
-                                            <h5 class="card-title">Greatest Skill</h5>
-                                            <p class="display-5">@Model.MostCommonStrength</p>
-                                        </div>
+                                <div class="col">
+                                    <div class="stat-card">
+                                        <h5 class="card-title">Greatest Skill</h5>
+                                        <p class="display-5">@Model.MostCommonStrength</p>
                                     </div>
                                 </div>
                             </div>
@@ -100,34 +94,23 @@
                         <!-- Suggestions Overview -->
                         <div class="form-section">
                             <h3 class="mb-3">Recommended Side Quests</h3>
-                            <div class="card shadow sheikah-border">
-                                <div class="card-header">
-                                    <h5 class="mb-0">Future Adventures</h5>
-                                </div>
-                                <div class="card-body">
-                                    <div class="form-row">
-                                        @foreach (var suggestion in Model.SuggestionsCounts)
-                                        {
-                                            <div class="form-group form-group-sm">
-                                                <div class="card h-100 border-0">
-                                                    <div class="card-body">
-                                                        <h6 class="card-title">@suggestion.Key</h6>
-                                                        <div class="d-flex align-items-end mt-2">
-                                                            <div class="progress flex-grow-1" style="height: 8px; background-color: rgba(89, 193, 189, 0.2);">
-                                                                <div class="progress-bar" role="progressbar" 
-                                                                     style="width: @(suggestion.Value * 100 / Math.Max(1, Model.FeedbackList.Count))%; background-color: var(--primary-color);" 
-                                                                     aria-valuenow="@suggestion.Value" 
-                                                                     aria-valuemin="0" 
-                                                                     aria-valuemax="@Model.FeedbackList.Count"></div>
-                                                            </div>
-                                                            <span class="ms-2 small">@suggestion.Value</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                            <div class="row row-cols-1 row-cols-md-3 g-3">
+                                @foreach (var suggestion in Model.SuggestionsCounts)
+                                {
+                                    <div class="col">
+                                        <div class="stat-card">
+                                            <h5 class="card-title">@suggestion.Key</h5>
+                                            <p class="display-5">@suggestion.Value</p>
+                                            <div class="progress mt-2" style="height: 6px; background-color: rgba(89, 193, 189, 0.2);">
+                                                <div class="progress-bar" role="progressbar" 
+                                                     style="width: @(suggestion.Value * 100 / Math.Max(1, Model.FeedbackList.Count))%; background-color: var(--primary-color);" 
+                                                     aria-valuenow="@suggestion.Value" 
+                                                     aria-valuemin="0" 
+                                                     aria-valuemax="@Model.FeedbackList.Count"></div>
                                             </div>
-                                        }
+                                        </div>
                                     </div>
-                                </div>
+                                }
                             </div>
                         </div>
 

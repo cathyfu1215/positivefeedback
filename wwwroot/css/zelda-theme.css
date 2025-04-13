@@ -371,4 +371,79 @@ textarea.form-control.sheikah-input {
   #improvementsBubbleChart .x-axis text {
     font-size: 9px !important;
   }
+}
+
+/* Compact stat cards for Hero's Journey Statistics */
+.stat-card {
+  border: 2px solid var(--primary-color);
+  border-radius: 8px;
+  background-color: rgba(255, 253, 248, 0.95);
+  padding: 0.75rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 2px 6px rgba(89, 193, 189, 0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 4px;
+  background-color: var(--primary-color);
+  clip-path: polygon(0 100%, 50% 0, 100% 100%);
+}
+
+.stat-card::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+  opacity: 0.4;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(89, 193, 189, 0.25);
+}
+
+.stat-card .card-title {
+  color: var(--text-color);
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+  font-weight: normal;
+}
+
+.stat-card .display-4,
+.stat-card .display-5 {
+  color: var(--primary-color);
+  font-size: 2rem;
+  font-weight: normal;
+  margin-bottom: 0;
+  line-height: 1.2;
+  text-shadow: 0 1px 1px rgba(89, 193, 189, 0.2);
+}
+
+/* Responsive stat cards */
+@media (max-width: 768px) {
+  .stat-card {
+    padding: 0.5rem;
+  }
+  
+  .stat-card .card-title {
+    font-size: 0.85rem;
+  }
+  
+  .stat-card .display-4,
+  .stat-card .display-5 {
+    font-size: 1.75rem;
+  }
 } 
