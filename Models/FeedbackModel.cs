@@ -32,10 +32,13 @@ namespace FeedbackApp.Models
         // Options for the different lists
         public static readonly List<string> RoleOptions = new List<string>
         {
-            "Peer",
-            "Professor / Teacher",
-            "HR / Recruiter",
-            "Team Lead / Manager",
+            "Technical Interviewer",
+            "Hiring Manager",
+            "HR/Recruiter",
+            "Professor/Instructor",
+            "Project Mentor / Supervisor",
+            "Peer/Classmate",
+            "Industry Professional",
             "Other"
         };
 
