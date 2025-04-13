@@ -1,18 +1,23 @@
 @page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Feedback Quest";
 }
 
 <div class="container py-4">
     <div class="row">
         <div class="col-12">
             <div class="card shadow">
-                <div class="card-header bg-primary text-white">
-                    <h2 class="mb-0">Positive Feedback Form</h2>
+                <div class="card-header">
+                    <h2 class="mb-0">
+                        <span class="zelda-icon triforce"></span>
+                        Adventurer's Feedback Scroll
+                    </h2>
                 </div>
                 <div class="card-body">
-                    <p class="lead mb-4">Use this form to provide constructive feedback. Your insights help improve performance and create growth opportunities.</p>
+                    <div class="quest-item mb-4">
+                        <p class="lead mb-0">Guide Cathy on her journey with your valuable insights. Your wisdom will help her level up her adventuring skills!</p>
+                    </div>
 
                     <form id="feedbackForm" method="post" class="needs-validation" novalidate>
                         @if (!string.IsNullOrEmpty(Model.SuccessMessage))
@@ -29,12 +34,12 @@
                             </div>
                         }
 
-                        <div class="form-section">
-                            <h3 class="mb-3">About You</h3>
+                        <div class="form-section sheikah-border">
+                            <h3 class="mb-3">Your Character Class</h3>
                             <div class="form-row">
                                 <div class="form-group form-group-lg">
-                                    <label asp-for="FeedbackInput.FeedbackProviderRole" class="form-label">Your Role</label>
-                                    <select asp-for="FeedbackInput.FeedbackProviderRole" class="form-select" required>
+                                    <label asp-for="FeedbackInput.FeedbackProviderRole" class="form-label">Choose Your Role</label>
+                                    <select asp-for="FeedbackInput.FeedbackProviderRole" class="form-select sheikah-input" required>
                                         <option value="">Select your role...</option>
                                         <option value="Technical Interviewer">Technical Interviewer</option>
                                         <option value="Hiring Manager">Hiring Manager</option>
@@ -52,10 +57,10 @@
                         </div>
 
                         <div class="form-section">
-                            <h3 class="mb-3">Feedback Areas</h3>
+                            <h3 class="mb-3">Adventure Assessment</h3>
                             
                             <div class="form-row">
-                                <div class="form-group form-group-md">
+                                <div class="form-group form-group-md sheikah-border">
                                     <label class="form-label">Strengths (Select at least one)</label>
                                     <div id="strengthsGroup" class="checkbox-group">
                                         <div class="form-check">
@@ -118,7 +123,7 @@
                                     <div class="invalid-feedback strength-feedback">Please select at least one strength.</div>
                                 </div>
                                 
-                                <div class="form-group form-group-md">
+                                <div class="form-group form-group-md sheikah-border">
                                     <label class="form-label">Areas for Improvement (Select at least one)</label>
                                     <div id="improvementsGroup" class="checkbox-group">
                                         <div class="form-check">
@@ -165,8 +170,8 @@
                                     <div class="invalid-feedback improvement-feedback">Please select at least one area for improvement.</div>
                                 </div>
                                 
-                                <div class="form-group form-group-md">
-                                    <label class="form-label">Suggestions for Future (Select at least one)</label>
+                                <div class="form-group form-group-md sheikah-border">
+                                    <label class="form-label">Suggestions for Future Quests (Select at least one)</label>
                                     <div id="suggestionsGroup" class="checkbox-group">
                                         <div class="form-check">
                                             <input class="form-check-input suggestion-check" type="checkbox" name="FeedbackInput.HirableSuggestions" value="Specialized Technical Training" id="suggestion1">
@@ -205,23 +210,27 @@
                                             <label class="form-check-label" for="suggestion9">Technical Mentorship</label>
                                         </div>
                                     </div>
-                                    <div class="invalid-feedback suggestion-feedback">Please select at least one suggestion.</div>
+                                    <div class="invalid-feedback suggestion-feedback">Please select at least one hiring suggestion.</div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="form-section">
-                            <h3 class="mb-3">Additional Comments</h3>
+                        <div class="form-section sheikah-border">
+                            <h3 class="mb-3">Additional Guidance</h3>
                             <div class="form-row">
-                                <div class="form-group" style="width: 100%;">
-                                    <label asp-for="FeedbackInput.Comments" class="form-label">Additional Comments (Optional)</label>
-                                    <textarea asp-for="FeedbackInput.Comments" class="form-control" rows="4"></textarea>
+                                <div class="form-group form-group-lg">
+                                    <label asp-for="FeedbackInput.Comments" class="form-label">Your Message to the Adventurer</label>
+                                    <textarea asp-for="FeedbackInput.Comments" class="form-control sheikah-input" rows="5" placeholder="Share your wisdom..."></textarea>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="d-flex justify-content-end mt-4">
-                            <button type="submit" class="btn btn-primary">Submit Feedback</button>
+                        <div class="form-section mt-4">
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <button type="submit" class="btn btn-sheikah btn-lg ancient-glow">
+                                    <span class="zelda-icon sheikah"></span> Submit Feedback
+                                </button>
+                            </div>
                         </div>
                     </form>
                 </div>

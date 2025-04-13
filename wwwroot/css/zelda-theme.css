@@ -1,0 +1,145 @@
+/* Zelda: Breath of the Wild Theme Elements */
+
+/* Sheikah Slate Border Effect */
+.sheikah-border {
+  position: relative;
+  border: 2px solid #59c1bd;
+  border-radius: 8px;
+  padding: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.sheikah-border::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: 20px;
+  width: 30px;
+  height: 8px;
+  background-color: #59c1bd;
+  clip-path: polygon(0 100%, 50% 0, 100% 100%);
+}
+
+.sheikah-border::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  right: 20px;
+  width: 30px;
+  height: 8px;
+  background-color: #59c1bd;
+  clip-path: polygon(0 0, 50% 100%, 100% 0);
+}
+
+/* Ancient Glow Effect */
+.ancient-glow {
+  box-shadow: 0 0 15px rgba(89, 193, 189, 0.4);
+  transition: box-shadow 0.3s ease;
+}
+
+.ancient-glow:hover {
+  box-shadow: 0 0 25px rgba(89, 193, 189, 0.6);
+}
+
+/* Quest Item Styling */
+.quest-item {
+  background-color: rgba(240, 188, 94, 0.1);
+  border-left: 3px solid var(--secondary-color);
+  padding: 0.75rem;
+  border-radius: 0 var(--border-radius) var(--border-radius) 0;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.quest-item::before {
+  content: "!";
+  position: absolute;
+  top: 0.5rem;
+  left: -12px;
+  background-color: var(--secondary-color);
+  color: white;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  text-align: center;
+  font-weight: bold;
+  line-height: 20px;
+  font-size: 14px;
+}
+
+/* Zelda Icons */
+.zelda-icon {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  margin-right: 0.5rem;
+  vertical-align: middle;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.zelda-icon.triforce {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="%23f0bc5e" d="M50 20L20 75h60L50 20zm0 20l15 25H35l15-25z"/></svg>');
+}
+
+.zelda-icon.sheikah {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle fill="none" stroke="%2359c1bd" stroke-width="4" cx="50" cy="50" r="40"/><circle fill="none" stroke="%2359c1bd" stroke-width="2" cx="50" cy="50" r="30"/><path fill="none" stroke="%2359c1bd" stroke-width="3" d="M50 10v80M10 50h80"/></svg>');
+}
+
+.zelda-icon.korok {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle fill="%2378b159" cx="50" cy="50" r="40"/><circle fill="white" cx="35" cy="40" r="8"/><circle fill="white" cx="65" cy="40" r="8"/><path fill="none" stroke="white" stroke-width="3" d="M40 65q10 10 20 0"/></svg>');
+}
+
+/* Custom Button Styles */
+.btn-sheikah {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-sheikah::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+.btn-sheikah:hover::after {
+  left: 100%;
+}
+
+.btn-hyrule {
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+  border: none;
+}
+
+/* Custom Form Styles */
+.form-control.sheikah-input, .form-select.sheikah-input {
+  border-color: var(--primary-color);
+  background-color: rgba(255, 255, 255, 0.8);
+  transition: all 0.3s ease;
+}
+
+.form-control.sheikah-input:focus, .form-select.sheikah-input:focus {
+  background-color: white;
+  box-shadow: 0 0 0 3px rgba(89, 193, 189, 0.2), 0 0 15px rgba(89, 193, 189, 0.3);
+}
+
+/* Progress Animation */
+@keyframes sheikahPulse {
+  0% { box-shadow: 0 0 0 0 rgba(89, 193, 189, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(89, 193, 189, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(89, 193, 189, 0); }
+}
+
+.sheikah-pulse {
+  animation: sheikahPulse 2s infinite;
+} 

@@ -1,67 +1,68 @@
 @page
 @model DashboardModel
 @{
-    ViewData["Title"] = "Feedback Dashboard";
+    ViewData["Title"] = "Adventure Log";
 }
 
 <div class="container py-4">
     <div class="row">
         <div class="col-12">
             <div class="card shadow">
-                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                    <h2 class="mb-0">Feedback Dashboard</h2>
-                    <a asp-page="/Index" class="btn btn-light btn-sm">Back to Form</a>
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h2 class="mb-0">
+                        <span class="zelda-icon sheikah"></span>
+                        Cathy's Adventure Log
+                    </h2>
+                    <a asp-page="/Index" class="btn btn-sheikah btn-sm">Return to Quest</a>
                 </div>
                 <div class="card-body">
                     @if (Model.IsLoading)
                     {
                         <div class="text-center py-4">
-                            <div class="spinner-border text-primary" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                            <p class="mt-3">Loading feedback data...</p>
+                            <div class="sheikah-pulse" style="width: 50px; height: 50px; border-radius: 50%; background-color: var(--primary-color); margin: 0 auto;"></div>
+                            <p class="mt-3">Communicating with the Sheikah Slate...</p>
                         </div>
                     }
                     else if (!Model.IsSupabaseConfigured)
                     {
-                        <div class="alert alert-warning">
-                            <h4 class="alert-heading">Supabase Not Configured</h4>
-                            <p>The Supabase credentials are missing or invalid. Please provide valid credentials to view feedback data.</p>
+                        <div class="quest-item">
+                            <h4 class="alert-heading">Sheikah Network Unavailable</h4>
+                            <p>The ancient technology isn't responding. Please reconfigure the connection to view adventure data.</p>
                         </div>
                     }
                     else if (Model.FeedbackList.Count == 0)
                     {
-                        <div class="alert alert-info">
-                            <h4 class="alert-heading">No Feedback Yet</h4>
-                            <p>There are no feedback submissions yet. Once users submit feedback, it will appear here.</p>
+                        <div class="quest-item">
+                            <h4 class="alert-heading">No Adventures Recorded</h4>
+                            <p>Cathy has not received any guidance from fellow adventurers yet. Once mentors provide feedback, it will appear here.</p>
                         </div>
                     }
                     else
                     {
                         <!-- Summary Stats Section -->
                         <div class="form-section">
-                            <h3 class="mb-3">Summary Statistics</h3>
+                            <h3 class="mb-3">Hero's Journey Statistics</h3>
                             <div class="form-row">
                                 <div class="form-group form-group-md">
-                                    <div class="card dashboard-card bg-light h-100">
+                                    <div class="card dashboard-card sheikah-border h-100">
                                         <div class="card-body text-center">
-                                            <h5 class="card-title">Total Submissions</h5>
+                                            <h5 class="card-title">Total Guidance Received</h5>
                                             <p class="display-4">@Model.FeedbackList.Count</p>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group form-group-md">
-                                    <div class="card dashboard-card bg-light h-100">
+                                    <div class="card dashboard-card sheikah-border h-100">
                                         <div class="card-body text-center">
-                                            <h5 class="card-title">Most Common Role</h5>
+                                            <h5 class="card-title">Most Common Mentor Type</h5>
                                             <p class="display-5">@Model.MostCommonRole</p>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group form-group-md">
-                                    <div class="card dashboard-card bg-light h-100">
+                                    <div class="card dashboard-card sheikah-border h-100">
                                         <div class="card-body text-center">
-                                            <h5 class="card-title">Most Mentioned Strength</h5>
+                                            <h5 class="card-title">Greatest Skill</h5>
                                             <p class="display-5">@Model.MostCommonStrength</p>
                                         </div>
                                     </div>
@@ -71,12 +72,12 @@
                         
                         <!-- Charts Section -->
                         <div class="form-section">
-                            <h3 class="mb-3">Performance Insights</h3>
+                            <h3 class="mb-3">Adventure Performance</h3>
                             <div class="form-row">
                                 <div class="form-group form-group-lg">
-                                    <div class="card shadow h-100">
-                                        <div class="card-header bg-primary text-white">
-                                            <h5 class="mb-0">Strengths Radar Chart</h5>
+                                    <div class="card shadow sheikah-border h-100">
+                                        <div class="card-header">
+                                            <h5 class="mb-0">Strength Map</h5>
                                         </div>
                                         <div class="card-body">
                                             <div id="strengthsRadarChart"></div>
@@ -84,9 +85,9 @@
                                     </div>
                                 </div>
                                 <div class="form-group form-group-lg">
-                                    <div class="card shadow h-100">
-                                        <div class="card-header bg-primary text-white">
-                                            <h5 class="mb-0">Areas for Improvement</h5>
+                                    <div class="card shadow sheikah-border h-100">
+                                        <div class="card-header">
+                                            <h5 class="mb-0">Skills to Master</h5>
                                         </div>
                                         <div class="card-body">
                                             <div id="improvementsBubbleChart"></div>
@@ -98,23 +99,23 @@
                         
                         <!-- Suggestions Overview -->
                         <div class="form-section">
-                            <h3 class="mb-3">Suggestions Overview</h3>
-                            <div class="card shadow">
-                                <div class="card-header bg-primary text-white">
-                                    <h5 class="mb-0">Future Opportunities</h5>
+                            <h3 class="mb-3">Recommended Side Quests</h3>
+                            <div class="card shadow sheikah-border">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Future Adventures</h5>
                                 </div>
                                 <div class="card-body">
                                     <div class="form-row">
                                         @foreach (var suggestion in Model.SuggestionsCounts)
                                         {
                                             <div class="form-group form-group-sm">
-                                                <div class="card h-100 border-0 bg-light">
+                                                <div class="card h-100 border-0">
                                                     <div class="card-body">
                                                         <h6 class="card-title">@suggestion.Key</h6>
                                                         <div class="d-flex align-items-end mt-2">
-                                                            <div class="progress flex-grow-1" style="height: 8px;">
-                                                                <div class="progress-bar bg-info" role="progressbar" 
-                                                                     style="width: @(suggestion.Value * 100 / Math.Max(1, Model.FeedbackList.Count))%;" 
+                                                            <div class="progress flex-grow-1" style="height: 8px; background-color: rgba(89, 193, 189, 0.2);">
+                                                                <div class="progress-bar" role="progressbar" 
+                                                                     style="width: @(suggestion.Value * 100 / Math.Max(1, Model.FeedbackList.Count))%; background-color: var(--primary-color);" 
                                                                      aria-valuenow="@suggestion.Value" 
                                                                      aria-valuemin="0" 
                                                                      aria-valuemax="@Model.FeedbackList.Count"></div>
@@ -132,10 +133,10 @@
 
                         <!-- Feedback Listing -->
                         <div class="form-section">
-                            <h3 class="mb-3">Recent Feedback</h3>
-                            <div class="card shadow">
-                                <div class="card-header bg-primary text-white">
-                                    <h5 class="mb-0">Detailed Submissions</h5>
+                            <h3 class="mb-3">Adventure Journal</h3>
+                            <div class="card shadow sheikah-border">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Detailed Guidance</h5>
                                 </div>
                                 <div class="card-body p-0">
                                     <div class="table-responsive">
@@ -143,11 +144,11 @@
                                             <thead>
                                                 <tr>
                                                     <th>Date</th>
-                                                    <th>Role</th>
+                                                    <th>Mentor</th>
                                                     <th>Strengths</th>
-                                                    <th>Improvements</th>
-                                                    <th>Suggestions</th>
-                                                    <th>Comments</th>
+                                                    <th>Skills to Master</th>
+                                                    <th>Recommended Quests</th>
+                                                    <th>Wisdom Shared</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
