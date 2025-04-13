@@ -213,8 +213,19 @@
         function initCharts() {
             console.log('Initializing all visualizations...');
             
-            createStrengthsRadarChart();
-            createImprovementsBubbleChart();
+            try {
+                // Create strength radar chart first
+                createStrengthsRadarChart();
+                console.log('Strength radar chart initialized');
+                
+                // Create improvements bubble chart with a slight delay
+                setTimeout(() => {
+                    createImprovementsBubbleChart();
+                    console.log('Improvements bubble chart initialized');
+                }, 100);
+            } catch (error) {
+                console.error('Error initializing charts:', error);
+            }
         }
         
         // Create Radar Chart for Strengths
@@ -234,8 +245,29 @@
             }
             
             // Transform data for radar chart
-            const labels = strengthsData.labels;
-            const data = strengthsData.datasets[0].data;
+            let labels = strengthsData.labels;
+            let data = strengthsData.datasets[0].data;
+            
+            // Filter to only show top 6-7 values
+            if (labels.length > 7) {
+                // Combine labels and data for sorting
+                const combinedData = labels.map((label, index) => ({
+                    label: label,
+                    value: data[index]
+                }));
+                
+                // Sort by value in descending order
+                combinedData.sort((a, b) => b.value - a.value);
+                
+                // Take only the top 7 values
+                const topValues = combinedData.slice(0, 7);
+                
+                // Extract labels and data from sorted values
+                labels = topValues.map(item => item.label);
+                data = topValues.map(item => item.value);
+                
+                console.log('Filtered strength radar chart to top 7 values');
+            }
             
             // Calculate dimensions
             const width = container.offsetWidth;
@@ -312,15 +344,33 @@
             // Add axis labels
             axes.append("text")
                 .attr("class", "axis-label")
-                .attr("text-anchor", "middle")
-                .attr("dy", "0.35em")
-                .attr("x", (d, i) => (radius + 20) * Math.cos(angleSlice * i - Math.PI / 2))
-                .attr("y", (d, i) => (radius + 20) * Math.sin(angleSlice * i - Math.PI / 2))
+                .attr("text-anchor", (d, i) => {
+                    // Position text anchors based on the angle
+                    const angle = angleSlice * i - Math.PI / 2;
+                    if (angle < -Math.PI * 0.25 && angle > -Math.PI * 0.75) return "end";
+                    if (angle > Math.PI * 0.25 && angle < Math.PI * 0.75) return "start";
+                    return "middle";
+                })
+                .attr("dy", (d, i) => {
+                    // Adjust vertical position based on angle
+                    const angle = angleSlice * i - Math.PI / 2;
+                    if (angle < -Math.PI * 0.75 || angle > Math.PI * 0.75) return "-0.5em";
+                    if (angle > -Math.PI * 0.25 && angle < Math.PI * 0.25) return "1em";
+                    return "0.35em";
+                })
+                .attr("x", (d, i) => (radius + 25) * Math.cos(angleSlice * i - Math.PI / 2))
+                .attr("y", (d, i) => (radius + 25) * Math.sin(angleSlice * i - Math.PI / 2))
                 .style("font-family", "Georgia")
                 .style("font-size", "14px")
                 .style("font-weight", "bold")
-                .style("fill", d => getStrengthColor(labels.indexOf(d)))
-                .text(d => d);
+                .style("fill", "#3c3228")
+                .style("text-shadow", "0 1px 1px rgba(255, 255, 255, 0.5)")
+                .style("opacity", 0)
+                .text(d => d)
+                .transition()
+                .delay(200)
+                .duration(800)
+                .style("opacity", 1);
                 
             // Convert data to coordinates
             const pathData = [];
@@ -347,9 +397,13 @@
                 .datum(pathData)
                 .attr("class", "radar-path")
                 .attr("d", radarLine)
-                .style("fill", "rgba(66, 133, 244, 0.3)")
-                .style("stroke", "#4285f4")
-                .style("stroke-width", "3px");
+                .style("fill", "rgba(89, 193, 189, 0.2)")  // Sheikah slate blue with transparency
+                .style("stroke", "#59c1bd")  // Sheikah slate blue
+                .style("stroke-width", "3px")
+                .style("opacity", 0)  // Start with zero opacity for animation
+                .transition()
+                .duration(1000)
+                .style("opacity", 1);  // Fade in
                 
             // Add data points
             chart.selectAll(".radar-point")
@@ -359,10 +413,14 @@
                 .attr("class", "radar-point")
                 .attr("cx", d => d.x)
                 .attr("cy", d => d.y)
-                .attr("r", 6)
+                .attr("r", 0)  // Start with radius 0 for animation
                 .style("fill", (d, i) => getStrengthColor(i))
                 .style("stroke", "#fff")
                 .style("stroke-width", "2px")
+                .transition()
+                .delay((d, i) => i * 100)  // Stagger the animation
+                .duration(500)
+                .attr("r", 8)  // Grow to final size
                 .append("title")
                 .text(d => `${d.label}: ${d.value}`);
             
@@ -377,152 +435,15 @@
                 .attr("text-anchor", "middle")
                 .attr("dy", "0.35em")
                 .style("font-family", "Georgia")
-                .style("font-size", "12px")
+                .style("font-size", "14px")  // Larger font size
                 .style("font-weight", "bold")
-                .style("fill", "#333")
-                .text(d => d.value);
-        }
-        
-        // Create Bubble Chart for Improvements
-        function createImprovementsBubbleChart() {
-            const container = document.getElementById('improvementsBubbleChart');
-            if (!container) return;
-            
-            // Clear the container
-            container.innerHTML = '';
-            
-            // Get the data for the chart
-            const improvementsData = @Html.Raw(Model.ImprovementsChartData);
-            
-            if (!improvementsData || !improvementsData.labels || improvementsData.labels.length === 0) {
-                container.innerHTML = '<div class="alert alert-info">Not enough data to display improvements chart</div>';
-                return;
-            }
-            
-            // Transform data into format for horizontal bar chart
-            const chartData = [];
-            improvementsData.labels.forEach((label, index) => {
-                chartData.push({
-                    label: label,
-                    value: improvementsData.datasets[0].data[index],
-                    color: getImprovementColor(index)
-                });
-            });
-            
-            // Sort data by value (descending)
-            chartData.sort((a, b) => b.value - a.value);
-            
-            // Calculate the appropriate left margin based on the longest text
-            const longestLabelLength = chartData.reduce((max, item) => 
-                Math.max(max, item.label.length), 0);
-            
-            // Set up dimensions
-            const width = container.offsetWidth;
-            const height = 300;
-            // Calculate left margin based on text length (minimum 150px)
-            const leftMargin = Math.max(150, longestLabelLength * 9);
-            const margin = {top: 20, right: 40, bottom: 30, left: leftMargin};
-            const chartWidth = width - margin.left - margin.right;
-            const chartHeight = height - margin.top - margin.bottom;
-            
-            // Create SVG element
-            const svg = d3.select("#improvementsBubbleChart")
-                .append("svg")
-                .attr("width", width)
-                .attr("height", height)
-                .append("g")
-                .attr("transform", `translate(${margin.left},${margin.top})`);
-            
-            // Create scales
-            const xScale = d3.scaleLinear()
-                .domain([0, d3.max(chartData, d => d.value) * 1.1]) // Add 10% padding
-                .range([0, chartWidth]);
-                
-            const yScale = d3.scaleBand()
-                .domain(chartData.map(d => d.label))
-                .range([0, chartHeight])
-                .padding(0.3);
-            
-            // Add axes
-            svg.append("g")
-                .attr("class", "x-axis")
-                .attr("transform", `translate(0,${chartHeight})`)
-                .call(d3.axisBottom(xScale)
-                    .ticks(Math.min(5, d3.max(chartData, d => d.value)))
-                    .tickSize(0)
-                )
-                .call(g => g.select(".domain").remove()) // Remove axis line
-                .selectAll("text")
-                .style("font-family", "Georgia")
-                .style("font-size", "12px")
-                .style("fill", "#5f6368");
-            
-            // Add y-axis with improved text positioning
-            const yAxis = svg.append("g")
-                .attr("class", "y-axis")
-                .call(d3.axisLeft(yScale)
-                    .tickSize(0)
-                )
-                .call(g => g.select(".domain").remove()); // Remove axis line
-                
-            // Manually position and style the y-axis text for better control
-            yAxis.selectAll("text").remove(); // Remove auto-generated text
-            
-            // Add custom text labels
-            yAxis.selectAll(".y-axis-label")
-                .data(chartData)
-                .enter()
-                .append("text")
-                .attr("class", "y-axis-label")
-                .attr("x", -15) // Position to the left of the bars
-                .attr("y", d => yScale(d.label) + yScale.bandwidth() / 2)
-                .attr("text-anchor", "end") // Right-align text
-                .attr("dominant-baseline", "middle") // Vertically center
-                .style("font-family", "Georgia")
-                .style("font-size", "14px")
-                .style("font-weight", "bold")
-                .style("fill", "#202124")
-                .text(d => d.label);
-            
-            // Add bars
-            const bars = svg.selectAll(".bar")
-                .data(chartData)
-                .enter()
-                .append("g");
-                
-            bars.append("rect")
-                .attr("class", "bar")
-                .attr("y", d => yScale(d.label))
-                .attr("height", yScale.bandwidth())
-                .attr("x", 0)
-                .attr("width", 0) // Start at 0 for animation
-                .attr("fill", d => d.color)
-                .attr("rx", 6) // Rounded corners
-                .attr("ry", 6);
-                
-            // Add animation
-            bars.selectAll("rect")
-                .transition()
-                .duration(800)
-                .attr("width", d => xScale(d.value));
-            
-            // Add value labels
-            bars.append("text")
-                .attr("x", d => xScale(d.value) - 10)
-                .attr("y", d => yScale(d.label) + yScale.bandwidth() / 2)
-                .attr("dy", ".35em")
-                .style("font-family", "Georgia")
-                .style("font-size", "16px")
-                .style("font-weight", "bold")
-                .style("fill", "white")
-                .style("text-anchor", "end")
-                .style("pointer-events", "none")
-                .style("text-shadow", "0px 1px 2px rgba(0,0,0,0.3)")
+                .style("fill", "#3c3228")  // Match Zelda theme text color
+                .style("opacity", 0)  // Start invisible
                 .text(d => d.value)
-                .attr("opacity", 0) // Start transparent for animation
                 .transition()
-                .duration(1200)
-                .attr("opacity", 1); // Fade in
+                .delay((d, i) => 700 + i * 100)  // Delay after points appear
+                .duration(500)
+                .style("opacity", 1);  // Fade in
         }
         
         // Color generator function for strengths
@@ -541,18 +462,170 @@
         // Color generator function for improvements
         function getImprovementColor(index) {
             const colors = [
-                "#ea4335", // Google Red
-                "#fbbc05", // Google Yellow
-                "#ff7043", // Deep Orange
-                "#ec407a", // Pink
-                "#ab47bc", // Purple
-                "#ef5350"  // Red
+                "#e06b52", // Ancient material red (Zelda-themed)
+                "#f0bc5e", // Zelda gold
+                "#59c1bd", // Sheikah slate blue
+                "#78b159", // Korok green
+                "#b9a574", // Ancient brass
+                "#7e57c2"  // Ancient purple
             ];
             return colors[index % colors.length];
         }
 
-        // Run initialization on page load
-        document.addEventListener('DOMContentLoaded', initCharts);
+        // Create Bubble Chart for Improvements
+        function createImprovementsBubbleChart() {
+            const container = document.getElementById('improvementsBubbleChart');
+            if (!container) return;
+            
+            // Clear the container
+            container.innerHTML = '';
+            
+            // Get the data for the chart
+            const improvementsData = @Html.Raw(Model.ImprovementsChartData);
+            
+            if (!improvementsData || !improvementsData.labels || improvementsData.labels.length === 0) {
+                container.innerHTML = '<div class="alert alert-info">Not enough data to display improvements chart</div>';
+                return;
+            }
+            
+            // Transform data into format for vertical bar chart
+            const chartData = [];
+            improvementsData.labels.forEach((label, index) => {
+                chartData.push({
+                    label: label,
+                    value: improvementsData.datasets[0].data[index],
+                    color: getImprovementColor(index)
+                });
+            });
+            
+            // Sort data by value (descending)
+            chartData.sort((a, b) => b.value - a.value);
+            
+            // Set up dimensions
+            const width = container.offsetWidth;
+            
+            // Adjust height based on number of categories and screen size
+            let calculatedHeight = chartData.length * (window.innerWidth < 768 ? 30 : 40);
+            const height = Math.max(300, Math.min(500, calculatedHeight)); // Min 300px, max 500px
+            
+            // Calculate margins - bottom margin needs to be larger for vertical chart labels
+            const margin = {top: 20, right: 20, bottom: 100, left: 60};
+            const chartWidth = width - margin.left - margin.right;
+            const chartHeight = height - margin.top - margin.bottom;
+            
+            // Check if dimensions are valid before proceeding
+            if (chartWidth <= 0 || chartHeight <= 0) {
+                console.error('Invalid chart dimensions:', {chartWidth, chartHeight, width, container});
+                container.innerHTML = '<div class="alert alert-warning">Chart area too small to render. Please resize window.</div>';
+                return;
+            }
+            
+            console.log('Rendering vertical improvements chart with dimensions:', {width, height, chartWidth, chartHeight});
+            
+            // Create SVG element
+            const svg = d3.select("#improvementsBubbleChart")
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height)
+                .append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
+            
+            // Create scales for vertical bars
+            const xScale = d3.scaleBand()
+                .domain(chartData.map(d => d.label))
+                .range([0, chartWidth])
+                .padding(0.3);
+                
+            const yScale = d3.scaleLinear()
+                .domain([0, d3.max(chartData, d => d.value) * 1.1]) // Add 10% padding
+                .range([chartHeight, 0]); // Note the reversed range for y-axis
+            
+            // Add axes for vertical chart
+            svg.append("g")
+                .attr("class", "x-axis")
+                .attr("transform", `translate(0,${chartHeight})`)
+                .call(d3.axisBottom(xScale))
+                .selectAll("text")
+                .style("font-family", "Georgia")
+                .style("font-size", "12px")
+                .style("fill", "#3c3228")
+                .style("text-anchor", "end")
+                .attr("dx", "-.8em")
+                .attr("dy", ".15em")
+                .attr("transform", "rotate(-45)"); // Rotate labels for better fit
+            
+            // Add y-axis
+            svg.append("g")
+                .attr("class", "y-axis")
+                .call(d3.axisLeft(yScale)
+                    .ticks(5)
+                    .tickSize(-chartWidth) // Add grid lines
+                )
+                .call(g => {
+                    g.select(".domain").remove(); // Remove axis line
+                    g.selectAll(".tick line")
+                        .attr("stroke", "#e0e0e0")
+                        .attr("stroke-dasharray", "2,2"); // Dotted grid lines
+                    g.selectAll(".tick text")
+                        .style("font-family", "Georgia")
+                        .style("font-size", "12px")
+                        .style("fill", "#3c3228");
+                });
+            
+            // Add bars - now vertical
+            const bars = svg.selectAll(".bar")
+                .data(chartData)
+                .enter()
+                .append("g");
+                
+            bars.append("rect")
+                .attr("class", "bar")
+                .attr("x", d => xScale(d.label))
+                .attr("y", chartHeight) // Start at bottom for animation
+                .attr("width", xScale.bandwidth())
+                .attr("height", 0) // Start with height 0 for animation
+                .attr("fill", d => d.color)
+                .attr("rx", 6) // Rounded corners
+                .attr("ry", 6);
+                
+            // Add animation
+            bars.selectAll("rect")
+                .transition()
+                .delay((d, i) => 300 + i * 100) // Stagger the animation
+                .duration(800)
+                .attr("y", d => yScale(d.value))
+                .attr("height", d => chartHeight - yScale(d.value));
+            
+            // Add value labels above bars
+            bars.append("text")
+                .attr("x", d => xScale(d.label) + xScale.bandwidth() / 2)
+                .attr("y", d => yScale(d.value) - 10)
+                .attr("text-anchor", "middle")
+                .style("font-family", "Georgia")
+                .style("font-size", "14px")
+                .style("font-weight", "bold")
+                .style("fill", "#3c3228")
+                .style("opacity", 0) // Start transparent for animation
+                .text(d => d.value)
+                .transition()
+                .delay((d, i) => 800 + i * 100) // Delay after bars appear
+                .duration(500)
+                .style("opacity", 1); // Fade in
+        }
+
+        // Run initialization on page load with retry mechanism
+        document.addEventListener('DOMContentLoaded', function() {
+            initCharts();
+            
+            // Add a fallback to retry chart initialization in case of issues
+            setTimeout(() => {
+                const bubbleChart = document.getElementById('improvementsBubbleChart');
+                if (bubbleChart && !bubbleChart.querySelector('svg')) {
+                    console.log('Retrying bubble chart initialization...');
+                    createImprovementsBubbleChart();
+                }
+            }, 1000);
+        });
         
         // Handle window resize to make charts responsive
         window.addEventListener('resize', function() {

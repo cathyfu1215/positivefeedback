@@ -65,10 +65,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const improveChartContainers = () => {
         const chartElements = document.querySelectorAll('#strengthsRadarChart, #improvementsBubbleChart');
         chartElements.forEach(chart => {
+            // Fix any potential CSS issues
+            chart.style.display = 'block';
+            chart.style.width = '100%';
+            chart.style.minHeight = '300px';
+            chart.style.overflow = 'visible';
+            
             // Only wrap if not already wrapped
             if (!chart.parentElement.classList.contains('chart-container')) {
                 const wrapper = document.createElement('div');
                 wrapper.className = 'chart-container';
+                wrapper.style.width = '100%';
+                wrapper.style.minHeight = '320px';
+                wrapper.style.overflow = 'visible';
                 chart.parentNode.insertBefore(wrapper, chart);
                 wrapper.appendChild(chart);
             }

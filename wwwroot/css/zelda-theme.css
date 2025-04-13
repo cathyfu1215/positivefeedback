@@ -283,22 +283,34 @@ textarea.form-control.sheikah-input {
 /* Dashboard Chart Styling */
 .card:has(#strengthsRadarChart),
 .card:has(#improvementsBubbleChart) {
-  overflow: hidden;
+  overflow: visible !important;
   position: relative;
+  margin-bottom: 2rem;
 }
 
 .card:has(#strengthsRadarChart) .card-body,
 .card:has(#improvementsBubbleChart) .card-body {
-  overflow: hidden;
+  overflow: visible !important;
   padding: 1rem;
+  min-height: 320px;
 }
 
 /* Make charts responsive */
 .chart-container {
   position: relative;
-  width: 100%;
+  width: 100% !important;
   max-width: 100%;
-  overflow: hidden;
+  overflow: visible !important;
+  min-height: 320px;
+}
+
+#strengthsRadarChart, 
+#improvementsBubbleChart {
+  width: 100%;
+  height: auto;
+  min-height: 300px;
+  display: block !important;
+  overflow: visible !important;
 }
 
 /* Add responsive adjustments */
@@ -325,5 +337,38 @@ textarea.form-control.sheikah-input {
   .quest-objectives li {
     font-size: 1rem;
     padding-left: 1.75rem;
+  }
+}
+
+/* Chart-specific styles */
+#improvementsBubbleChart {
+  width: 100%;
+  height: auto;
+  min-height: 300px;
+  margin: 0 auto;
+}
+
+#improvementsBubbleChart .bar {
+  transition: fill 0.3s ease;
+}
+
+#improvementsBubbleChart .bar:hover {
+  fill-opacity: 0.8;
+  filter: brightness(1.1);
+}
+
+/* Bar chart responsive adjustments */
+@media (max-width: 768px) {
+  #improvementsBubbleChart {
+    min-height: 350px;
+    margin-bottom: 1rem;
+  }
+  
+  #improvementsBubbleChart text {
+    font-size: 10px !important;
+  }
+  
+  #improvementsBubbleChart .x-axis text {
+    font-size: 9px !important;
   }
 } 
