@@ -5,8 +5,8 @@
   position: relative;
   border: 2px solid #59c1bd;
   border-radius: 8px;
-  padding: 0.5rem;
-  margin-bottom: 1.5rem;
+  padding: 1rem;
+  margin-bottom: 2rem;
 }
 
 .sheikah-border::before {
@@ -43,7 +43,7 @@
 
 /* Quest Item Styling */
 .quest-item {
-  background-color: rgba(240, 188, 94, 0.1);
+  background-color: rgba(240, 188, 94, 0.15);
   border-left: 3px solid var(--secondary-color);
   padding: 0.75rem;
   border-radius: 0 var(--border-radius) var(--border-radius) 0;
@@ -124,7 +124,7 @@
 /* Custom Form Styles */
 .form-control.sheikah-input, .form-select.sheikah-input {
   border-color: var(--primary-color);
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 253, 248, 0.8);
   transition: all 0.3s ease;
 }
 
@@ -142,4 +142,24 @@
 
 .sheikah-pulse {
   animation: sheikahPulse 2s infinite;
+}
+
+/* Parchment Texture Effect */
+.parchment-texture {
+  position: relative;
+  overflow: hidden;
+}
+
+.parchment-texture::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="none"/><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.05 0"/></filter><rect width="100" height="100" filter="url(%23noise)" fill="%23e8d5bc" opacity="0.3"/></svg>');
+  background-size: 200px 200px;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.3;
 } 

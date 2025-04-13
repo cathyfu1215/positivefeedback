@@ -3,7 +3,7 @@
   --secondary-color: #f0bc5e;  /* Zelda gold */
   --accent-color-green: #78b159;  /* Korok green */
   --accent-color-red: #e06b52;  /* Ancient material red */
-  --background-color: #f8f5e8;  /* Ancient parchment */
+  --background-color: #f2e8d5;  /* Aged parchment */
   --text-color: #3c3228;  /* Hyrule text */
   --border-radius: 12px;
   --box-shadow: 0 4px 12px rgba(60, 50, 40, 0.1);
@@ -25,13 +25,14 @@ body {
   background-color: var(--background-color);
   color: var(--text-color);
   line-height: 1.6;
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100" fill="none"><path d="M50 5L95 50L50 95L5 50L50 5Z" stroke="%2359c1bd" stroke-width="0.5" fill="none" opacity="0.1"/></svg>');
-  background-size: 100px 100px;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100" fill="none"><path d="M50 5L95 50L50 95L5 50L50 5Z" stroke="%2359c1bd" stroke-width="0.5" fill="none" opacity="0.1"/></svg>'),
+                    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><rect width="200" height="200" fill="%23f2e8d5"/><path d="M0,0 L200,200 M200,0 L0,200" stroke="%23e8d5bc" stroke-width="0.5" opacity="0.3"/></svg>');
+  background-size: 100px 100px, 200px 200px;
 }
 
 /* Modern Navigation */
 .navbar {
-  background-color: rgba(248, 245, 232, 0.9) !important;
+  background-color: rgba(242, 232, 213, 0.9) !important;
   box-shadow: 0 2px 8px rgba(60, 50, 40, 0.08);
   padding: 1rem 0;
   border-bottom: 1px solid rgba(89, 193, 189, 0.2);
@@ -72,24 +73,24 @@ body {
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
   transition: var(--transition);
-  background-color: rgba(255, 255, 255, 0.85);
-  margin-bottom: 1.5rem;
+  background-color: rgba(255, 253, 248, 0.95);
+  margin-bottom: 2rem;
   width: 100%;
   border-left: 3px solid var(--primary-color);
 }
 
 .card-header {
-  background-color: rgba(248, 245, 232, 0.6);
+  background-color: rgba(242, 232, 213, 0.7);
   border-bottom: 1px solid rgba(89, 193, 189, 0.2);
   font-weight: normal;
-  padding: 1rem;
+  padding: 1.25rem;
   font-size: 1.5rem;
   font-family: Georgia, "Times New Roman", serif;
   color: var(--primary-color);
 }
 
 .card-body {
-  padding: 1.25rem;
+  padding: 1.5rem;
 }
 
 /* Form Elements */
@@ -105,9 +106,10 @@ body {
   font-size: 1.25rem;
   padding: 0.75rem 1rem;
   border-radius: var(--border-radius);
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(228, 214, 188, 0.8);
   font-family: Georgia, "Times New Roman", serif;
   transition: var(--transition);
+  background-color: rgba(255, 253, 248, 0.8);
 }
 
 .form-control:focus, .form-select:focus {
@@ -312,11 +314,11 @@ body {
   flex-wrap: wrap;
   margin-right: -15px;
   margin-left: -15px;
-  gap: 20px;
+  gap: 30px;
 }
 
 .form-group {
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
   padding: 0 15px;
 }
 
@@ -326,9 +328,10 @@ body {
   background-color: rgba(66, 133, 244, 0.03);
   border: 1px solid rgba(66, 133, 244, 0.1);
   border-radius: var(--border-radius);
-  padding: 1.25rem;
+  padding: 1.5rem;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
   transition: var(--transition);
+  margin-bottom: 2rem;
 }
 
 .form-group-md:hover {
@@ -371,7 +374,8 @@ body {
   overflow-y: auto;
   padding: 0.5rem;
   border-radius: 8px;
-  background-color: rgba(255, 255, 255, 0.7);
+  background-color: rgba(255, 253, 248, 0.8);
+  border: 1px solid rgba(228, 214, 188, 0.7);
 }
 
 /* Add column headers styling */
@@ -498,7 +502,7 @@ body {
   width: 20px;
   height: 20px;
   margin-right: 10px;
-  background-color: white;
+  background-color: rgba(255, 253, 248, 0.9);
   border: 2px solid var(--primary-color);
   border-radius: 4px;
   vertical-align: middle;
