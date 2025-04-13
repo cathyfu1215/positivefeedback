@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace FeedbackApp.Pages
 {
@@ -21,6 +22,9 @@ namespace FeedbackApp.Pages
         
         public string ErrorMessage { get; set; }
         public string SuccessMessage { get; set; }
+        
+        [TempData]
+        public string TempSuccessMessage { get; set; }
 
         public IndexModel(ILogger<IndexModel> logger, SupabaseService supabaseService, IConfiguration configuration)
         {
@@ -32,12 +36,21 @@ namespace FeedbackApp.Pages
 
         public void OnGet()
         {
+            // Check if there's a success message in TempData
+            if (TempSuccessMessage != null)
+            {
+                SuccessMessage = TempSuccessMessage;
+            }
+            
             // Check if Supabase credentials are configured
             if (string.IsNullOrEmpty(_configuration["Supabase:Url"]) || 
                 string.IsNullOrEmpty(_configuration["Supabase:Key"]))
             {
                 ErrorMessage = "This app requires Supabase credentials to function. Ask the administrator to provide them.";
             }
+            
+            // Initialize a new feedback model for the form
+            FeedbackInput = new FeedbackModel();
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -89,11 +102,14 @@ namespace FeedbackApp.Pages
 
                 if (success)
                 {
-                    // Set success message and clear the form model
-                    SuccessMessage = "Thank you for your feedback! It has been submitted successfully.";
-                    ModelState.Clear(); // Clear model state to prevent re-validation errors
-                    FeedbackInput = new FeedbackModel(); // Reset the form fields
-                    return Page(); 
+                    // Set success message in TempData
+                    TempSuccessMessage = "Thank you for your feedback! It has been submitted successfully.";
+                    
+                    // Clear form data
+                    ModelState.Clear();
+                    
+                    // Redirect to the same page to avoid form resubmission on refresh
+                    return RedirectToPage();
                 }
                 else
                 {

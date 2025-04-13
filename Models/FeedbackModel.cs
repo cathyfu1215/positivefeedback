@@ -41,38 +41,47 @@ namespace FeedbackApp.Models
 
         public static readonly List<string> StrengthOptions = new List<string>
         {
-            "Technical skills",
-            "Communication",
-            "Problem solving",
-            "Teamwork",
-            "Adaptability",
-            "Leadership",
-            "Time management",
-            "Creativity"
+            "Tech Communication",
+            "Code Quality",
+            "Algorithms",
+            "System Design",
+            "Debugging",
+            "Data Structures",
+            "API Integration",
+            "Testing Approach",
+            "Problem-Solving",
+            "Technical Depth",
+            "Collaboration",
+            "Learning Agility",
+            "Project Planning",
+            "Tech Versatility"
         };
 
         public static readonly List<string> ImprovementOptions = new List<string>
         {
-            "Confidence",
-            "Technical depth",
-            "Communication clarity",
-            "Structured thinking",
-            "Project experience",
-            "Handling pressure",
-            "Field-specific knowledge",
-            "Practice with real scenarios"
+            "Technical Communication",
+            "Problem-Solving Approach",
+            "Code Quality & Best Practices",
+            "System Design Knowledge",
+            "Time & Project Management",
+            "Algorithmic Thinking",
+            "Collaborative Coding Skills",
+            "Technical Depth vs. Breadth",
+            "API & Documentation Usage",
+            "Testing & Debugging Practices"
         };
 
         public static readonly List<string> HirableSuggestionOptions = new List<string>
         {
-            "More portfolio projects",
-            "Practice with system design",
-            "Practice with algorithms",
-            "Stronger behavioral stories",
-            "Refine resume",
-            "Networking",
-            "Mock interviews",
-            "Research companies better"
+            "Specialized Technical Training",
+            "Open Source Contributions",
+            "Side Project Development",
+            "Technical Writing/Documentation",
+            "Software Architecture Experience",
+            "Full-Stack Development Skills",
+            "Cloud/DevOps Exposure",
+            "ML/AI Knowledge Building",
+            "Technical Mentorship"
         };
     }
 }
