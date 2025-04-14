@@ -41,7 +41,7 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 
-// Specify binding to 0.0.0.0 port 5008
-app.Urls.Add("http://0.0.0.0:5008");
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+app.Urls.Add($"http://0.0.0.0:{port}");
 
 app.Run();
