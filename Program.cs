@@ -24,6 +24,14 @@ if (!string.IsNullOrEmpty(supabaseUrl) && !string.IsNullOrEmpty(supabaseKey))
 
 var app = builder.Build();
 
+// Add headers for embedding
+app.Use(async (context, next) =>
+{
+    context.Response.Headers.Add("Content-Security-Policy", "frame-ancestors 'self' *.google.com");
+    context.Response.Headers.Add("X-Frame-Options", "ALLOW-FROM https://sites.google.com");
+    await next();
+});
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
