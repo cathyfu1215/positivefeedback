@@ -1,8 +1,9 @@
 services:
   - type: web
     name: positivefeedback
-    env: dotnet
+    env: docker
     buildCommand: "dotnet build"
     startCommand: "dotnet run"
     autoDeploy: true
     branch: main
+    dockerfilePath: ./Dockerfile
