@@ -6,7 +6,7 @@ A lightweight, anonymous feedback collection platform for job seekers to gather 
 
 > 📝 **Note:** This project was created by Cathy as a learning exercise for C#, developed with the assistance of Cursor IDE and Claude-3.7-Sonnet AI.
 
-## �� Table of Contents
+## Table of Contents
 
 - [Purpose](#-purpose)
 - [Features](#-features)
@@ -114,13 +114,14 @@ create table feedback (
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/interview-feedback-app.git
-   cd interview-feedback-app
+   git clone https://github.com/cathyfu1215/positivefeedback.git
+   cd positivefeedback
    ```
 
-2. Restore dependencies:
+2. Restore dependencies and run the app:
    ```bash
    dotnet restore
+   dotnet run
    ```
 
 ### Configuration
@@ -189,3 +190,9 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## 📄 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Screenshots
+
+![Screenshot 2025-07-08 at 10 08 23 PM](https://github.com/user-attachments/assets/08d2d4ca-f071-4555-954a-cbdea1743926)
+![Screenshot 2025-07-08 at 10 08 34 PM](https://github.com/user-attachments/assets/51ce17b5-41b0-4590-a513-a091ff94d49e)
+
